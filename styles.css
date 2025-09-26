@@ -1,0 +1,112 @@
+/* Reset base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  color: #eee;
+  background: #111;
+  line-height: 1.4;
+}
+
+/* Header */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 1rem;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+header h1 {
+  font-size: 1.4rem;
+}
+
+header nav a {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: #eee;
+  transition: color 0.3s;
+}
+
+header nav a:hover {
+  color: #ddd;
+}
+
+/* Sezioni */
+section {
+  padding: 6rem 2rem 4rem;
+  min-height: 60vh;
+}
+
+/* Showcase (galleria opere) */
+#showcase .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+#showcase .item {
+  position: relative;
+  overflow: hidden;
+}
+
+#showcase .item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+#showcase .item:hover img {
+  transform: scale(1.1);
+}
+
+.caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  padding: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+#showcase .item:hover .caption {
+  opacity: 1;
+}
+
+/* About & Contact */
+#about, #contact {
+  max-width: 800px;
+  margin: auto;
+  color: #ccc;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: #777;
+}
+
+/* Animazioni on-scroll */
+.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
