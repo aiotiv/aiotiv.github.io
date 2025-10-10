@@ -1,7 +1,13 @@
-// Script per menu mobile
-const menuToggle = document.querySelector('.menu-toggle');
-const navLinks = document.querySelector('.nav-links');
+const videos = document.querySelectorAll('.art-video');
 
-menuToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('active');
-});
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      entry.target.play();
+    } else {
+      entry.target.pause();
+    }
+  });
+}, { threshold: 0.5 });
+
+videos.forEach(video => observer.observe(video));
