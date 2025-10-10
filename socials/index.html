@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>isolated.png - Socials</title>
+      <!-- Добавляем favicon -->
+  <link rel="icon" type="image/png" href="/thumbs/isolatedlogotransparentb2048.png">
+  <!-- Подключаем футуристический шрифт Orbitron -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <!-- Подключаем иконки Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      overflow: hidden;
+      background-color: #0f0f0f;
+      background-image: radial-gradient(#222 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .menu-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .menu-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+    }
+
+    /* Sound Wave Icon */
+    .sound-wave {
+      width: 40px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .sound-wave span {
+      width: 4px;
+      height: 16px;
+      background: white;
+      border-radius: 2px;
+      opacity: 0.8;
+      animation: pulse 1.5s infinite alternate;
+    }
+
+    .sound-wave span:nth-child(1) { height: 24px; animation-delay: 0s; }
+    .sound-wave span:nth-child(2) { height: 16px; animation-delay: 0.1s; }
+    .sound-wave span:nth-child(3) { height: 8px; animation-delay: 0.2s; }
+    .sound-wave span:nth-child(4) { height: 16px; animation-delay: 0.3s; }
+    .sound-wave span:nth-child(5) { height: 24px; animation-delay: 0.4s; }
+
+    @keyframes pulse {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* Dropdown Menu */
+    .dropdown-menu {
+      position: absolute;
+      top: 100px;
+      left: 20px;
+      width: 200px;
+      background: rgba(0, 0, 0, 0.9);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      z-index: 1001;
+    }
+
+    /* Добавлено поведение для hover */
+    .menu-button:hover + .dropdown-menu,
+    .dropdown-menu:hover {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-menu-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .dropdown-menu-header .sound-wave {
+      width: 40px;
+      height: 32px;
+      opacity: 0.8;
+    }
+
+    .dropdown-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .dropdown-menu li {
+      margin-bottom: 15px;
+    }
+
+    .dropdown-menu a {
+      color: #ffffff;
+      text-decoration: none;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 16px;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      position: relative;
+      display: block;
+    }
+
+    .dropdown-menu a:hover {
+      color: #ff0000;
+      transform: scale(1.02);
+    }
+
+    .dropdown-menu a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #ff0000;
+      transition: width 0.3s ease;
+    }
+
+    .dropdown-menu a:hover::after {
+      width: 100%;
+    }
+
+    /* Close button */
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .close-btn:hover {
+      transform: rotate(90deg);
+      color: #ff0000;
+    }
+
+    /* Workspace */
+    .workspace {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: top left;
+      transition: transform 0.1s ease;
+    }
+
+    /* Social Links Section */
+    .social-links {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+    }
+
+    .social-links h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    .social-links ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .social-links li {
+      margin: 0;
+    }
+
+    .social-links a {
+      color: white;
+      text-decoration: none;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .social-links a:hover {
+      color: #ff0000;
+      transform: scale(1.1);
+    }
+
+    .social-links a i {
+      font-size: 36px;
+    }
+
+    /* Connect with Me Section */
+    .connect-with-me {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: white;
+    }
+
+    .connect-with-me h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .connect-with-me ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .connect-with-me li {
+      margin: 0;
+    }
+
+    .connect-with-me a {
+      color: white;
+      text-decoration: none;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .connect-with-me a:hover {
+      color: #ff0000;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Menu Button -->
+  <div class="menu-button">
+    <div class="sound-wave">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- Dropdown Menu -->
+  <div class="dropdown-menu" id="menu">
+    <div class="dropdown-menu-header">
+      <div class="sound-wave">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <ul>
+      <li><a href="/isolatedspace/">Isolated Space</a></li>
+      <li><a href="/commercial/">Showcase</a></li>
+      <li><a href="/workflows/">Soon/.</a></li>
+      <li><a href="/socials/">Socials, contact</a></li>
+      <li><a href="/about/">About</a></li>
+    </ul>
+    <button class="close-btn">✕</button>
+  </div>
+
+  <!-- Workspace -->
+  <div class="workspace">
+    <div class="canvas" id="canvas"></div>
+  </div>
+
+  <!-- Social Links Section -->
+  <div class="social-links">
+    <h1>Social Links</h1>
+    <ul>
+      <li>
+        <a href="https://www.instagram.com/ai.otiv/" target="_blank">
+          <i class="fab fa-instagram"></i>
+          Instagram
+        </a>
+      </li>
+      <li>
+        <a href="https://www.youtube.com/@AIOTIV/videos" target="_blank">
+          <i class="fab fa-youtube"></i>
+          YouTube
+        </a>
+      </li>
+     
+    </ul>
+  </div>
+
+  <!-- Connect with Me Section -->
+  <div class="connect-with-me">
+    <h2>Connect with Me</h2>
+    <ul>
+      <li><a href="https://t.me/isolatedpng" target="_blank">Telegram</a></li>
+      <li><a href="https://discord.com/users/isolated.png" target="_blank">Discord</a></li>
+      <li><a href="mailto:aiotivprojects@gmail.com">Email</a></li>
+    </ul>
+  </div>
+
+</body>
+</html>
