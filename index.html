@@ -1,150 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OTIV</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Helvetica Neue', sans-serif;
-    }
-
-    html, body {
-      height: 100%;
-      background: #000;
-      color: #fff;
-      overflow: hidden;
-    }
-
-    /* INTRO SCREEN */
-    #intro {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      background: #000;
-      transition: opacity 1s ease;
-      z-index: 2;
-    }
-
-    #intro.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .enter-text {
-      font-size: 2rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      animation: fadeIn 2s ease-in-out forwards;
-      cursor: pointer;
-      transition: 0.4s;
-    }
-
-    .enter-text:hover {
-      letter-spacing: 0.4em;
-      opacity: 0.8;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* BACKGROUND VIDEO */
-    video.background-video {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      opacity: 0.25;
-      z-index: 0;
-    }
-
-    .overlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.7), #000);
-      z-index: 1;
-    }
-
-    /* GALLERY */
-    #gallery {
-      display: none;
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      overflow-y: scroll;
-      background: #000;
-      z-index: 1;
-    }
-
-    #gallery.active {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 10px;
-      padding: 10px;
-      overflow-y: scroll;
-    }
-
-    .thumb {
-      position: relative;
-      overflow: hidden;
-      border-radius: 8px;
-      transition: transform 0.3s ease;
-    }
-
-    .thumb:hover {
-      transform: scale(1.05);
-    }
-
-    .thumb video,
-    .thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-  </style>
+  <title>AIOTIV</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- INTRO -->
-  <div id="intro">
-    <video class="background-video" autoplay loop muted playsinline>
-      <source src="thumbs/bg.mp4" type="video/mp4">
+  <!-- Video di sfondo -->
+  <video autoplay muted loop id="bg-video">
+    <source src="videos/background.mp4" type="video/mp4">
+    Il tuo browser non supporta il video.
+  </video>
+
+  <!-- Testo sopra il video -->
+  <div class="overlay-text">
+    <h1>Join the Party</h1>
+  </div>
+
+  <!-- Galleria di video -->
+  <div class="gallery">
+    <video muted loop playsinline class="art-video">
+      <source src="videos/art1.mp4" type="video/mp4">
     </video>
-    <div class="overlay"></div>
-    <div class="enter-text" id="enterBtn">JOIN THE PARTY</div>
+    <video muted loop playsinline class="art-video">
+      <source src="videos/art2.mp4" type="video/mp4">
+    </video>
+    <video muted loop playsinline class="art-video">
+      <source src="videos/art3.mp4" type="video/mp4">
+    </video>
+    <!-- aggiungi altri video qui -->
   </div>
 
-  <!-- GALLERY -->
-  <div id="gallery">
-    <div class="thumb"><video autoplay loop muted playsinline src="thumbs/clip1.mp4"></video></div>
-    <div class="thumb"><video autoplay loop muted playsinline src="thumbs/clip2.mp4"></video></div>
-    <div class="thumb"><img src="thumbs/img1.jpg" alt="OTIV visual"></div>
-    <div class="thumb"><video autoplay loop muted playsinline src="thumbs/clip3.mp4"></video></div>
-    <div class="thumb"><img src="thumbs/img2.jpg" alt="OTIV visual"></div>
-  </div>
-
-  <script>
-    const enterBtn = document.getElementById('enterBtn');
-    const intro = document.getElementById('intro');
-    const gallery = document.getElementById('gallery');
-
-    enterBtn.addEventListener('click', () => {
-      intro.classList.add('fade-out');
-      setTimeout(() => {
-        intro.style.display = 'none';
-        gallery.classList.add('active');
-        document.body.style.overflow = 'auto';
-      }, 1000);
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
