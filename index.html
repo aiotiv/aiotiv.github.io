@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIOTIV</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIOTIV - Join the Party</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Video di sfondo -->
-  <video autoplay muted loop id="bg-video">
-    <source src="videos/background.mp4" type="video/mp4">
-    Il tuo browser non supporta il video.
-  </video>
+    <!-- Sfondo video a tutto schermo -->
+    <div class="hero">
+        <video autoplay muted loop class="background-video">
+            <source src="sfondo.mp4" type="video/mp4">
+            Il tuo browser non supporta i video.
+        </video>
+        <div class="overlay">
+            <h1>JOIN THE PARTY</h1>
+        </div>
+    </div>
 
-  <!-- Testo sopra il video -->
-  <div class="overlay-text">
-    <h1>Join the Party</h1>
-  </div>
+    <!-- Gallery di video -->
+    <section class="gallery">
+        <video class="gallery-video" muted loop>
+            <source src="video1.mp4" type="video/mp4">
+        </video>
+        <video class="gallery-video" muted loop>
+            <source src="video2.mp4" type="video/mp4">
+        </video>
+        <video class="gallery-video" muted loop>
+            <source src="video3.mp4" type="video/mp4">
+        </video>
+        <!-- Aggiungi altri video qui -->
+    </section>
 
-  <!-- Galleria di video -->
-  <div class="gallery">
-    <video muted loop playsinline class="art-video">
-      <source src="videos/art1.mp4" type="video/mp4">
-    </video>
-    <video muted loop playsinline class="art-video">
-      <source src="videos/art2.mp4" type="video/mp4">
-    </video>
-    <video muted loop playsinline class="art-video">
-      <source src="videos/art3.mp4" type="video/mp4">
-    </video>
-    <!-- aggiungi altri video qui -->
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
