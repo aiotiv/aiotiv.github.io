@@ -1,324 +1,67 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3.0">
-  <title>Otiv - Portfolio Space</title>
-  <link rel="icon" type="image/png" href="./favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      overflow: hidden;
-      background-color: #0f0f0f;
-      background-image: radial-gradient(#222 1px, transparent 1px);
-      background-size: 20px 20px;
-    }
+<!doctype html>
+<section class="hero">
+<div class="hero-inner container">
+<h1>Visuals. Motion. Story.</h1>
+<p>Studio creativo specializzato in video, AI-driven visuals e motion design.</p>
+</div>
+</section>
 
-    /* LOGO */
-    header {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 1100;
-    }
-    header img {
-      height: 60px;
-      border-radius: 8px;
-    }
 
-    .menu-button {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      z-index: 1000;
-      font-size: 28px;
-      color: white;
-    }
+<section id="work" class="gallery container">
+<h2>Selected Work</h2>
+<div class="grid">
+<!-- card template: replace data-src with your video file -->
+<div class="card" data-src="assets/videos/sample-1.mp4">
+<div class="thumb">
+<img src="assets/img/poster.jpg" alt="poster" />
+<div class="play">▶</div>
+</div>
+<div class="meta">
+<h3>Project One</h3>
+<p>Experimental motion — 0:12</p>
+</div>
+</div>
 
-    .menu-button:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: scale(1.05);
-    }
 
-    .dropdown-menu {
-      position: absolute;
-      top: 90px;
-      right: 20px;
-      width: 200px;
-      background: rgba(0, 0, 0, 0.9);
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-10px);
-      transition: all 0.3s ease;
-      z-index: 1001;
-    }
+<div class="card" data-src="assets/videos/sample-2.mp4">
+<div class="thumb">
+<img src="assets/img/poster.jpg" alt="poster" />
+<div class="play">▶</div>
+</div>
+<div class="meta">
+<h3>Project Two</h3>
+<p>Looping visual — 0:08</p>
+</div>
+</div>
 
-    .menu-button.active + .dropdown-menu,
-    .dropdown-menu.active {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
 
-    .dropdown-menu ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+</div>
+</section>
 
-    .dropdown-menu li {
-      margin-bottom: 15px;
-    }
 
-    .dropdown-menu a {
-      color: #ffffff;
-      text-decoration: none;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 16px;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-      position: relative;
-      display: block;
-    }
+<section id="about" class="about container">
+<h2>About</h2>
+<p>OTIV Creative Studio: creiamo narrazioni visive attraverso video e AI-driven workflows. Contattaci per progetti, collaborazioni e commissioni.</p>
+</section>
 
-    .dropdown-menu a:hover {
-      color: #ff0000;
-      transform: scale(1.02);
-    }
 
-    .workspace {
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
+<section id="contact" class="contact container">
+<h2>Contact</h2>
+<p>Email: <a href="mailto:hello@otiv.studio">hello@otiv.studio</a></p>
+</section>
+</main>
 
-    .canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      transform-origin: top left;
-      transition: transform 0.1s ease;
-    }
 
-    .tile {
-      border-radius: 12px;
-      border: 4px solid transparent;
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
-      background-color: #111;
-      position: absolute;
-      cursor: grab;
-      overflow: hidden;
-    }
+<!-- Video Modal -->
+<div id="videoModal" class="modal">
+<div class="modal-inner">
+<button id="closeModal" class="close">✕</button>
+<video id="modalVideo" controls playsinline webkit-playsinline></video>
+</div>
+</div>
 
-    .tile.dragging {
-      cursor: grabbing;
-      transform: scale(1.05) translateY(-5px);
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-      z-index: 1001;
-    }
 
-    .tile video {
-      display: block;
-      border-radius: 8px;
-      pointer-events: none;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    #loadingOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.95);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      color: #6ecf9f;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 32px;
-      letter-spacing: 4px;
-      text-shadow: 0 0 20px rgba(110, 207, 159, 0.7);
-      animation: loadingPulse 1.2s ease-in-out infinite;
-    }
-
-    @keyframes loadingPulse {
-      0%, 100% { opacity: 0.7; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.05); }
-    }
-  </style>
-</head>
-<body>
-
-  <div id="loadingOverlay">LOADING...</div>
-
-  <!-- LOGO -->
-  <header>
-    <a href="./"><img src="./images/favicon.png" alt="logo"></a>
-  </header>
-
-  <!-- MENU -->
-  <div class="menu-button" id="menuButton">≡</div>
-  <div class="dropdown-menu" id="menu">
-    <ul>
-      <li><a href="./">Home</a></li>
-      <li><a href="./portfolio/">Portfolio</a></li>
-      <li><a href="./showcase/">Showcase</a></li>
-      <li><a href="./contact/">Contatti</a></li>
-      <li><a href="./about/">About</a></li>
-    </ul>
-  </div>
-
-  <div class="workspace">
-    <div class="canvas" id="canvas"></div>
-  </div>
-
-  <script>
-    const frameColors = ['#6ecf9f', '#8aa9ff', '#d88aff', '#ff8ab3', '#ffd88a'];
-    const works = [
-      { type: 'video', src: './videos/demo1.mp4' },
-      { type: 'video', src: './videos/demo2.mp4' },
-      { type: 'video', src: './videos/demo3.mp4' },
-      { type: 'video', src: './videos/demo4.mp4' },
-    ];
-
-    const canvas = document.getElementById('canvas');
-    const menuButton = document.getElementById('menuButton');
-    const menu = document.getElementById('menu');
-
-    menuButton.addEventListener('click', (e) => {
-      e.stopPropagation();
-      menuButton.classList.toggle('active');
-      menu.classList.toggle('active');
-    });
-
-    // canvas transform
-    let canvasX = 0, canvasY = 0, canvasScale = 1;
-    function updateCanvasTransform() {
-      canvas.style.transform = `translate(${canvasX}px, ${canvasY}px) scale(${canvasScale})`;
-    }
-
-    // zoom con wheel
-    document.addEventListener('wheel', e => {
-      e.preventDefault();
-      const scaleAmount = e.deltaY > 0 ? 0.975 : 1.05;
-      const rect = canvas.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
-      const oldScale = canvasScale;
-      canvasScale *= scaleAmount;
-      canvasScale = Math.max(0.5, Math.min(canvasScale, 3));
-      const scaleChange = canvasScale / oldScale;
-      canvasX = mouseX - (mouseX - canvasX) * scaleChange;
-      canvasY = mouseY - (mouseY - canvasY) * scaleChange;
-      updateCanvasTransform();
-    }, { passive: false });
-
-    // crea tile video
-    let nextX = 40, nextY = 100, maxHeight = 0;
-    works.forEach((work, index) => {
-      const tile = document.createElement('div');
-      tile.className = 'tile';
-      tile.style.borderColor = frameColors[Math.floor(Math.random() * frameColors.length)];
-
-      const video = document.createElement('video');
-      video.src = work.src;
-      video.loop = true;
-      video.muted = false;
-      video.playsInline = true;
-      video.autoplay = false;
-
-      video.onloadedmetadata = function() {
-        const aspectRatio = this.videoWidth / this.videoHeight;
-        const maxWidth = 400, maxHeight = 600;
-        let width, height;
-        if (aspectRatio > 1) {
-          width = Math.min(maxWidth, this.videoWidth * 0.3);
-          height = width / aspectRatio;
-        } else {
-          height = Math.min(maxHeight, this.videoHeight * 0.3);
-          width = height * aspectRatio;
-        }
-        width = Math.max(200, width);
-        height = Math.max(200, height);
-        tile.style.width = `${width}px`;
-        tile.style.height = `${height}px`;
-      };
-
-      // play/stop on hover
-      tile.addEventListener('mouseenter', () => video.play());
-      tile.addEventListener('mouseleave', () => video.pause());
-
-      tile.appendChild(video);
-      tile.style.left = `${nextX}px`;
-      tile.style.top = `${nextY}px`;
-      nextX += 225;
-      maxHeight = Math.max(maxHeight, 350);
-      if (nextX > window.innerWidth * 1.2) {
-        nextX = 40;
-        nextY += maxHeight + 30;
-        maxHeight = 0;
-      }
-      canvas.appendChild(tile);
-    });
-
-    // drag tile sempre attivo
-    let draggingTile = null, offsetX = 0, offsetY = 0;
-    document.addEventListener('mousedown', e => {
-      const tile = e.target.closest('.tile');
-      if (tile) {
-        draggingTile = tile;
-        const rect = tile.getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
-        tile.classList.add('dragging');
-      }
-    });
-    document.addEventListener('mousemove', e => {
-      if (draggingTile) {
-        const invScale = 1 / canvasScale;
-        const newX = (e.clientX - offsetX - canvasX) * invScale;
-        const newY = (e.clientY - offsetY - canvasY) * invScale;
-        draggingTile.style.left = `${newX}px`;
-        draggingTile.style.top = `${newY}px`;
-      }
-    });
-    document.addEventListener('mouseup', () => {
-      if (draggingTile) {
-        draggingTile.classList.remove('dragging');
-        draggingTile = null;
-      }
-    });
-
-    updateCanvasTransform();
-
-    // loader fade
-    setTimeout(() => {
-      const loadingOverlay = document.getElementById('loadingOverlay');
-      if (loadingOverlay) {
-        loadingOverlay.style.transition = 'opacity 0.4s ease';
-        loadingOverlay.style.opacity = '0';
-        setTimeout(() => loadingOverlay.remove(), 400);
-      }
-    }, 500);
-  </script>
+<script src="assets/js/loader.js"></script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>
