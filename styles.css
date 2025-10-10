@@ -1,11 +1,9 @@
-/* Reset base */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* Stile generale */
 body {
   font-family: Arial, Helvetica, sans-serif;
   color: #333;
@@ -14,11 +12,12 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Header e navigazione */
+/* Header e nav */
 header {
   background-color: #fff;
   border-bottom: 1px solid #ddd;
 }
+
 nav {
   max-width: 1000px;
   margin: auto;
@@ -27,54 +26,61 @@ nav {
   justify-content: space-between;
   padding: 1rem;
 }
+
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
   text-decoration: none;
   color: #333;
 }
+
 .nav-links {
   list-style: none;
   display: flex;
 }
+
 .nav-links li {
   margin-left: 1rem;
 }
+
 .nav-links a {
   text-decoration: none;
   color: #333;
   padding: 0.5rem;
   transition: color 0.3s;
 }
+
 .nav-links a:hover {
   color: #0077cc;
 }
-/* Menu toggle (mobile) */
+
 .menu-toggle {
   display: none;
   font-size: 1.5rem;
   cursor: pointer;
 }
 
-/* Sezioni principali */
+/* Contenuto */
 main {
   max-width: 1000px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
+
 section {
   margin-bottom: 2rem;
 }
+
 h1 {
   margin-bottom: 1rem;
 }
 
-/* Griglia progetti */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
+
 .project-card {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -82,11 +88,13 @@ h1 {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: transform 0.3s;
 }
+
 .project-card img {
   width: 100%;
   height: auto;
   margin-bottom: 0.5rem;
 }
+
 .project-card:hover {
   transform: translateY(-5px);
 }
@@ -98,11 +106,8 @@ footer {
   padding: 1rem;
   border-top: 1px solid #ddd;
 }
-footer p {
-  font-size: 0.9rem;
-}
 
-/* Stile responsive (mobile) */
+/* Responsive */
 @media (max-width: 600px) {
   .nav-links {
     display: none;
@@ -110,13 +115,16 @@ footer p {
     width: 100%;
     background-color: #fff;
   }
+
   .nav-links.active {
     display: flex;
   }
+
   .nav-links li {
     margin: 0.5rem 0;
     text-align: center;
   }
+
   .menu-toggle {
     display: block;
   }
