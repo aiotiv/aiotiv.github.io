@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3.0">
-  <title>Otiv - Portfolio</title>
+  <title>Otiv - Portfolio Space</title>
   <link rel="icon" type="image/png" href="./favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
   <style>
@@ -28,7 +28,6 @@
       border-radius: 8px;
     }
 
-    /* MENU */
     .menu-button {
       position: fixed;
       top: 20px;
@@ -43,6 +42,8 @@
       cursor: pointer;
       transition: all 0.3s ease;
       z-index: 1000;
+      font-size: 28px;
+      color: white;
     }
 
     .menu-button:hover {
@@ -122,37 +123,60 @@
       position: absolute;
       cursor: grab;
       overflow: hidden;
-      z-index: 1;
     }
 
     .tile.dragging {
       cursor: grabbing;
       transform: scale(1.05) translateY(-5px);
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-      z-index: 1000;
+      z-index: 1001;
     }
 
     .tile video {
       display: block;
       border-radius: 8px;
+      pointer-events: none;
       width: 100%;
       height: 100%;
       object-fit: contain;
+    }
+
+    #loadingOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      color: #6ecf9f;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 32px;
+      letter-spacing: 4px;
+      text-shadow: 0 0 20px rgba(110, 207, 159, 0.7);
+      animation: loadingPulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes loadingPulse {
+      0%, 100% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
     }
   </style>
 </head>
 <body>
 
+  <div id="loadingOverlay">LOADING...</div>
+
   <!-- LOGO -->
   <header>
-    <a href="./">
-      <img src="./images/mio-logo.png" alt="logo">
-    </a>
+    <a href="./"><img src="./images/favicon.png" alt="logo"></a>
   </header>
 
   <!-- MENU -->
   <div class="menu-button" id="menuButton">≡</div>
-
   <div class="dropdown-menu" id="menu">
     <ul>
       <li><a href="./">Home</a></li>
@@ -169,11 +193,11 @@
 
   <script>
     const frameColors = ['#6ecf9f', '#8aa9ff', '#d88aff', '#ff8ab3', '#ffd88a'];
-
-    // SOLO VIDEO
     const works = [
       { type: 'video', src: './videos/demo1.mp4' },
       { type: 'video', src: './videos/demo2.mp4' },
+      { type: 'video', src: './videos/demo3.mp4' },
+      { type: 'video', src: './videos/demo4.mp4' },
     ];
 
     const canvas = document.getElementById('canvas');
@@ -186,88 +210,98 @@
       menu.classList.toggle('active');
     });
 
-    // variabili per canvas pan e zoom
+    // canvas transform
     let canvasX = 0, canvasY = 0, canvasScale = 1;
-
     function updateCanvasTransform() {
       canvas.style.transform = `translate(${canvasX}px, ${canvasY}px) scale(${canvasScale})`;
     }
 
-    // zoom con rotellina
-    window.addEventListener('wheel', e => {
-      if (e.ctrlKey || e.metaKey) {
-        e.preventDefault();
-        const delta = e.deltaY > 0 ? -0.1 : 0.1;
-        canvasScale = Math.min(Math.max(canvasScale + delta, 0.2), 3);
-        updateCanvasTransform();
-      }
+    // zoom con wheel
+    document.addEventListener('wheel', e => {
+      e.preventDefault();
+      const scaleAmount = e.deltaY > 0 ? 0.975 : 1.05;
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      const oldScale = canvasScale;
+      canvasScale *= scaleAmount;
+      canvasScale = Math.max(0.5, Math.min(canvasScale, 3));
+      const scaleChange = canvasScale / oldScale;
+      canvasX = mouseX - (mouseX - canvasX) * scaleChange;
+      canvasY = mouseY - (mouseY - canvasY) * scaleChange;
+      updateCanvasTransform();
     }, { passive: false });
 
-    // pan canvas
-    let isPanning = false, startX, startY;
-    window.addEventListener('mousedown', e => {
-      if (e.target === document.body || e.target === document.querySelector('.workspace')) {
-        isPanning = true;
-        startX = e.clientX - canvasX;
-        startY = e.clientY - canvasY;
-      }
-    });
-    window.addEventListener('mousemove', e => {
-      if (isPanning) {
-        canvasX = e.clientX - startX;
-        canvasY = e.clientY - startY;
-        updateCanvasTransform();
-      }
-    });
-    window.addEventListener('mouseup', () => isPanning = false);
-
-    // crea le tile (solo video)
+    // crea tile video
+    let nextX = 40, nextY = 100, maxHeight = 0;
     works.forEach((work, index) => {
       const tile = document.createElement('div');
       tile.className = 'tile';
       tile.style.borderColor = frameColors[Math.floor(Math.random() * frameColors.length)];
-      tile.style.left = `${50 + index * 320}px`;
-      tile.style.top = `120px`;
-      tile.style.width = '300px';
-      tile.style.height = '200px';
 
       const video = document.createElement('video');
       video.src = work.src;
       video.loop = true;
       video.muted = false;
       video.playsInline = true;
-      video.autoplay = true;
+      video.autoplay = false;
+
+      video.onloadedmetadata = function() {
+        const aspectRatio = this.videoWidth / this.videoHeight;
+        const maxWidth = 400, maxHeight = 600;
+        let width, height;
+        if (aspectRatio > 1) {
+          width = Math.min(maxWidth, this.videoWidth * 0.3);
+          height = width / aspectRatio;
+        } else {
+          height = Math.min(maxHeight, this.videoHeight * 0.3);
+          width = height * aspectRatio;
+        }
+        width = Math.max(200, width);
+        height = Math.max(200, height);
+        tile.style.width = `${width}px`;
+        tile.style.height = `${height}px`;
+      };
+
+      // play/stop on hover
+      tile.addEventListener('mouseenter', () => video.play());
+      tile.addEventListener('mouseleave', () => video.pause());
 
       tile.appendChild(video);
+      tile.style.left = `${nextX}px`;
+      tile.style.top = `${nextY}px`;
+      nextX += 225;
+      maxHeight = Math.max(maxHeight, 350);
+      if (nextX > window.innerWidth * 1.2) {
+        nextX = 40;
+        nextY += maxHeight + 30;
+        maxHeight = 0;
+      }
       canvas.appendChild(tile);
     });
 
-    // drag tile
-    let draggingTile = null;
-    let dragOffsetX = 0, dragOffsetY = 0;
-
-    canvas.addEventListener('mousedown', (e) => {
+    // drag tile sempre attivo
+    let draggingTile = null, offsetX = 0, offsetY = 0;
+    document.addEventListener('mousedown', e => {
       const tile = e.target.closest('.tile');
       if (tile) {
         draggingTile = tile;
         const rect = tile.getBoundingClientRect();
-        dragOffsetX = e.clientX - rect.left;
-        dragOffsetY = e.clientY - rect.top;
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
         tile.classList.add('dragging');
       }
     });
-
-    window.addEventListener('mousemove', (e) => {
+    document.addEventListener('mousemove', e => {
       if (draggingTile) {
         const invScale = 1 / canvasScale;
-        const newX = (e.clientX - dragOffsetX - canvasX) * invScale;
-        const newY = (e.clientY - dragOffsetY - canvasY) * invScale;
+        const newX = (e.clientX - offsetX - canvasX) * invScale;
+        const newY = (e.clientY - offsetY - canvasY) * invScale;
         draggingTile.style.left = `${newX}px`;
         draggingTile.style.top = `${newY}px`;
       }
     });
-
-    window.addEventListener('mouseup', () => {
+    document.addEventListener('mouseup', () => {
       if (draggingTile) {
         draggingTile.classList.remove('dragging');
         draggingTile = null;
@@ -275,6 +309,16 @@
     });
 
     updateCanvasTransform();
+
+    // loader fade
+    setTimeout(() => {
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      if (loadingOverlay) {
+        loadingOverlay.style.transition = 'opacity 0.4s ease';
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => loadingOverlay.remove(), 400);
+      }
+    }, 500);
   </script>
 </body>
 </html>
