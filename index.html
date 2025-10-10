@@ -1,38 +1,126 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIOTIV - Join the Party</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=3.0">
+  <title>AIOTIV Portfolio</title>
+  <link rel="icon" type="image/png" href="/thumbs/isolatedlogotransparentb2048.png">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0f0f0f;
+      background-image: radial-gradient(#222 1px, transparent 1px);
+      background-size: 20px 20px;
+      overflow: hidden;
+    }
+
+    /* MENU BUTTON */
+    .menu-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    .menu-button:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); }
+    .sound-wave { display: flex; gap:4px; align-items:center; justify-content:center; }
+    .sound-wave span { width:4px;height:16px;background:#fff;border-radius:2px;opacity:0.8;animation:pulse 1.5s infinite alternate;}
+    .sound-wave span:nth-child(1){height:24px;animation-delay:0s;}
+    .sound-wave span:nth-child(2){height:16px;animation-delay:0.1s;}
+    .sound-wave span:nth-child(3){height:8px;animation-delay:0.2s;}
+    .sound-wave span:nth-child(4){height:16px;animation-delay:0.3s;}
+    .sound-wave span:nth-child(5){height:24px;animation-delay:0.4s;}
+    @keyframes pulse{0%{opacity:0.5;}100%{opacity:1;}}
+
+    /* DROPDOWN MENU */
+    .dropdown-menu{
+      position: absolute; top:100px; left:20px;
+      width:200px; background:rgba(0,0,0,0.9);
+      border-radius:8px; padding:20px; box-shadow:0 0 20px rgba(0,0,0,0.5);
+      opacity:0; visibility:hidden; transform:translateY(-10px);
+      transition: all 0.3s ease; z-index:1001;
+    }
+    .menu-button.active + .dropdown-menu,
+    .dropdown-menu:hover {opacity:1; visibility:visible; transform:translateY(0);}
+    .dropdown-menu ul{list-style:none;padding:0;margin:0;}
+    .dropdown-menu li{margin-bottom:15px;}
+    .dropdown-menu a{color:#fff;text-decoration:none;font-size:16px;letter-spacing:1px;display:block;transition:all 0.3s ease;}
+    .dropdown-menu a:hover{color:#ff0000; transform:scale(1.02);}
+    .dropdown-menu a::after{content:'';position:absolute;bottom:-5px;left:0;width:0;height:2px;background:#ff0000;transition:width 0.3s ease;}
+    .dropdown-menu a:hover::after{width:100%;}
+    .close-btn{position:absolute;top:10px;right:10px;width:20px;height:20px;background:transparent;border:none;color:white;font-size:16px;cursor:pointer;transition:all 0.3s ease;}
+    .close-btn:hover{transform:rotate(90deg);color:#ff0000;}
+
+    /* WORKSPACE */
+    .workspace{width:100vw;height:100vh;position:relative;overflow:hidden;}
+    .canvas{position:absolute;top:0;left:0;transform-origin:top left;transition:transform 0.1s ease;}
+    .tile{position:absolute;background:#111;border-radius:12px;border:4px solid transparent;overflow:hidden;cursor:default;transition:transform 0.2s ease, box-shadow 0.3s ease;}
+    .tile img,.tile video{width:100%;height:100%;object-fit:contain;border-radius:8px;pointer-events:none;}
+    .tile:hover{box-shadow:0 0 12px rgba(255,255,255,0.2);}
+    .tile.dragging{transform:scale(1.05) translateY(-5px);box-shadow:0 0 20px rgba(255,255,255,0.3);}
+    .tile.sound-on{border-color:#ff6b6b;box-shadow:0 0 15px rgba(255,107,107,0.4);}
+    .sound-indicator{position:absolute;top:8px;right:8px;width:20px;height:20px;background:rgba(255,107,107,0.8);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:12px;color:white;z-index:10;}
+
+    /* LOADING */
+    #loadingOverlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;z-index:9999;color:#6ecf9f;font-size:32px;text-shadow:0 0 20px rgba(110,207,159,0.7);animation:loadingPulse 1.2s ease-in-out infinite;}
+    @keyframes loadingPulse{0%,100%{opacity:0.7;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
+
+    /* MOBILE RESPONSIVE */
+    @media screen and (max-width:768px){.menu-button{width:60px;height:60px;top:15px;left:15px;}.sound-wave{width:30px;height:24px;gap:3px;}.tile{min-width:150px;min-height:150px;}.workspace{touch-action:pan-x pan-y pinch-zoom;}.canvas{width:100%;min-width:100vw;}}
+    @media screen and (max-width:480px){.menu-button{width:50px;height:50px;top:10px;left:10px;}.tile{min-width:120px;min-height:120px;}}
+  </style>
 </head>
 <body>
-    <!-- Sfondo video a tutto schermo -->
-    <div class="hero">
-        <video autoplay muted loop class="background-video">
-            <source src="background.mp4" type="video/mp4">
-            Il tuo browser non supporta i video.
-        </video>
-        <div class="overlay">
-            <h1>JOIN THE PARTY</h1>
-        </div>
-    </div>
+  <div id="loadingOverlay">LOADING...</div>
 
-    <!-- Gallery di video -->
-    <section class="gallery">
-        <video class="gallery-video" muted loop>
-            <source src="video1.mp4" type="video/mp4">
-        </video>
-        <video class="gallery-video" muted loop>
-            <source src="video2.mp4" type="video/mp4">
-        </video>
-        <video class="gallery-video" muted loop>
-            <source src="video3.mp4" type="video/mp4">
-        </video>
-        <!-- Aggiungi altri video qui -->
-    </section>
+  <!-- MENU BUTTON -->
+  <div class="menu-button" id="menuButton">
+    <div class="sound-wave"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+  <!-- DROPDOWN MENU -->
+  <div class="dropdown-menu" id="menu">
+    <ul>
+      <li><a href="/isolatedspace/">Isolated Space</a></li>
+      <li><a href="/commercial/">Showcase</a></li>
+      <li><a href="/workflows/">Soon/.</a></li>
+      <li><a href="/socials/">Socials, contact</a></li>
+      <li><a href="/about/">About</a></li>
+    </ul>
+    <button class="close-btn">✕</button>
+  </div>
 
+  <!-- WORKSPACE -->
+  <div class="workspace">
+    <div class="canvas" id="canvas"></div>
+  </div>
+
+  <script>
+    const frameColors=['#6ecf9f','#8aa9ff','#d88aff','#ff8ab3','#ffd88a'];
+    const works=[
+      {type:'image',src:'/thumbs/image1.png'},
+      {type:'video',src:'/thumbs/balenciaga.mp4'},
+      {type:'video',src:'/thumbs/sora11.mp4'},
+      {type:'image',src:'/thumbs/green1.png'}
+      // aggiungi qui tutti i tuoi file
+    ];
+
+    const canvas=document.getElementById('canvas');
+    let nextX=40,nextY=100,maxHeight=0,isMobile=window.innerWidth<=768,activeVideo=null;
+
+    // MENU INTERACTION
+    const menuButton=document.getElementById('menuButton');
+    const menu=document.getElementById('menu');
+    menuButton.addEventListener('click',e=>{e.stopPropagation();menuButton.classList.toggle('active');menu.classList.toggle('active');});
+    document.querySelector('.close-btn').addEventListener('click',()=>{menuButton.classList.remove('active');menu.classList.remove('active');});
+    document.addEventListener('click',e
