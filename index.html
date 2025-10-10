@@ -16,7 +16,7 @@
       background-size: 20px 20px;
     }
 
-    /* LOGO IN ALTO A SINISTRA */
+    /* LOGO */
     header {
       position: fixed;
       top: 10px;
@@ -28,10 +28,11 @@
       border-radius: 8px;
     }
 
+    /* MENU */
     .menu-button {
       position: fixed;
       top: 20px;
-      right: 20px; /* spostato a destra, così il logo sta a sinistra */
+      right: 20px;
       width: 60px;
       height: 60px;
       background: rgba(255, 255, 255, 0.05);
@@ -121,39 +122,19 @@
       position: absolute;
       cursor: grab;
       overflow: hidden;
-    }
-
-    .tile:active {
-      cursor: grabbing;
+      z-index: 1;
     }
 
     .tile.dragging {
+      cursor: grabbing;
       transform: scale(1.05) translateY(-5px);
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      z-index: 1000;
     }
 
-    .sound-indicator {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 20px;
-      height: 20px;
-      background: rgba(255, 107, 107, 0.8);
-      border-radius: 50%;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      color: white;
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    .tile img,
     .tile video {
       display: block;
       border-radius: 8px;
-      pointer-events: none;
       width: 100%;
       height: 100%;
       object-fit: contain;
@@ -162,12 +143,10 @@
 </head>
 <body>
 
-  <div id="loadingOverlay">LOADING...</div>
-
   <!-- LOGO -->
   <header>
     <a href="./">
-      <img src="./images/favicon.png" alt="logo">
+      <img src="./images/mio-logo.png" alt="logo">
     </a>
   </header>
 
@@ -191,10 +170,9 @@
   <script>
     const frameColors = ['#6ecf9f', '#8aa9ff', '#d88aff', '#ff8ab3', '#ffd88a'];
 
+    // SOLO VIDEO
     const works = [
-      { type: 'image', src: './images/work1.jpg' },
       { type: 'video', src: './videos/demo1.mp4' },
-      { type: 'image', src: './images/work2.jpg' },
       { type: 'video', src: './videos/demo2.mp4' },
     ];
 
@@ -208,61 +186,95 @@
       menu.classList.toggle('active');
     });
 
-    // CARICAMENTO TILE
+    // variabili per canvas pan e zoom
+    let canvasX = 0, canvasY = 0, canvasScale = 1;
+
+    function updateCanvasTransform() {
+      canvas.style.transform = `translate(${canvasX}px, ${canvasY}px) scale(${canvasScale})`;
+    }
+
+    // zoom con rotellina
+    window.addEventListener('wheel', e => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.1 : 0.1;
+        canvasScale = Math.min(Math.max(canvasScale + delta, 0.2), 3);
+        updateCanvasTransform();
+      }
+    }, { passive: false });
+
+    // pan canvas
+    let isPanning = false, startX, startY;
+    window.addEventListener('mousedown', e => {
+      if (e.target === document.body || e.target === document.querySelector('.workspace')) {
+        isPanning = true;
+        startX = e.clientX - canvasX;
+        startY = e.clientY - canvasY;
+      }
+    });
+    window.addEventListener('mousemove', e => {
+      if (isPanning) {
+        canvasX = e.clientX - startX;
+        canvasY = e.clientY - startY;
+        updateCanvasTransform();
+      }
+    });
+    window.addEventListener('mouseup', () => isPanning = false);
+
+    // crea le tile (solo video)
     works.forEach((work, index) => {
       const tile = document.createElement('div');
       tile.className = 'tile';
       tile.style.borderColor = frameColors[Math.floor(Math.random() * frameColors.length)];
-      tile.style.left = `${50 + index * 220}px`;
+      tile.style.left = `${50 + index * 320}px`;
       tile.style.top = `120px`;
       tile.style.width = '300px';
       tile.style.height = '200px';
 
-      let content;
-      if (work.type === 'image') {
-        content = document.createElement('img');
-        content.src = work.src;
-      } else if (work.type === 'video') {
-        content = document.createElement('video');
-        content.src = work.src;
-        content.loop = true;
-        content.muted = false;
-        content.playsInline = true;
-      }
-      tile.appendChild(content);
+      const video = document.createElement('video');
+      video.src = work.src;
+      video.loop = true;
+      video.muted = false;
+      video.playsInline = true;
+      video.autoplay = true;
+
+      tile.appendChild(video);
       canvas.appendChild(tile);
     });
 
-    // RENDI LE TILE TRASCINABILI
-    let activeTile = null;
-    let offsetX = 0, offsetY = 0;
+    // drag tile
+    let draggingTile = null;
+    let dragOffsetX = 0, dragOffsetY = 0;
 
-    document.addEventListener('mousedown', e => {
+    canvas.addEventListener('mousedown', (e) => {
       const tile = e.target.closest('.tile');
       if (tile) {
-        activeTile = tile;
+        draggingTile = tile;
         const rect = tile.getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
+        dragOffsetX = e.clientX - rect.left;
+        dragOffsetY = e.clientY - rect.top;
         tile.classList.add('dragging');
-        tile.style.zIndex = 1001;
       }
     });
 
-    document.addEventListener('mousemove', e => {
-      if (activeTile) {
-        activeTile.style.left = (e.clientX - offsetX) + 'px';
-        activeTile.style.top = (e.clientY - offsetY) + 'px';
+    window.addEventListener('mousemove', (e) => {
+      if (draggingTile) {
+        const invScale = 1 / canvasScale;
+        const newX = (e.clientX - dragOffsetX - canvasX) * invScale;
+        const newY = (e.clientY - dragOffsetY - canvasY) * invScale;
+        draggingTile.style.left = `${newX}px`;
+        draggingTile.style.top = `${newY}px`;
       }
     });
 
-    document.addEventListener('mouseup', () => {
-      if (activeTile) {
-        activeTile.classList.remove('dragging');
-        activeTile.style.zIndex = 1000;
-        activeTile = null;
+    window.addEventListener('mouseup', () => {
+      if (draggingTile) {
+        draggingTile.classList.remove('dragging');
+        draggingTile = null;
       }
     });
+
+    updateCanvasTransform();
   </script>
 </body>
 </html>
