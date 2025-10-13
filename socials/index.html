@@ -1,24 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it"> <!-- Impostiamo la lingua della pagina su italiano -->
 <head>
   <meta charset="UTF-8">
-  <title>Otiv - Socials</title>
-      <!-- Добавляем favicon -->
-  <link rel="icon" type="image/png" href="/thumbs/isolatedlogotransparentb2048.png">
-  <!-- Подключаем футуристический шрифт Orbitron -->
+  <title>Otiv - Social</title>
+  
+  <!-- Icona del sito (favicon) -->
+  <link rel="icon" type="image/png" href="/thumbs/otivtransparentlogo.png">
+
+  <!-- Font futuristico Orbitron da Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-  <!-- Подключаем иконки Font Awesome -->
+
+  <!-- Libreria di icone Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <style>
+    /* Stile base della pagina: sfondo scuro con griglia */
     body {
       margin: 0;
       font-family: sans-serif;
       overflow: hidden;
-      background-color: #0f0f0f;
+      background-color: #36454F;
       background-image: radial-gradient(#222 1px, transparent 1px);
       background-size: 20px 20px;
     }
 
+    /* Pulsante menu in alto a sinistra */
     .menu-button {
       position: fixed;
       top: 20px;
@@ -40,7 +46,7 @@
       transform: scale(1.05);
     }
 
-    /* Sound Wave Icon */
+    /* Icona ad “onde sonore” animata dentro al pulsante */
     .sound-wave {
       width: 40px;
       height: 32px;
@@ -61,7 +67,7 @@
 
     .sound-wave span:nth-child(1) { height: 24px; animation-delay: 0s; }
     .sound-wave span:nth-child(2) { height: 16px; animation-delay: 0.1s; }
-    .sound-wave span:nth-child(3) { height: 8px; animation-delay: 0.2s; }
+    .sound-wave span:nth-child(3) { height: 8px;  animation-delay: 0.2s; }
     .sound-wave span:nth-child(4) { height: 16px; animation-delay: 0.3s; }
     .sound-wave span:nth-child(5) { height: 24px; animation-delay: 0.4s; }
 
@@ -70,7 +76,7 @@
       100% { opacity: 1; }
     }
 
-    /* Dropdown Menu */
+    /* Menu a tendina nascosto, appare al passaggio del mouse */
     .dropdown-menu {
       position: absolute;
       top: 100px;
@@ -87,7 +93,7 @@
       z-index: 1001;
     }
 
-    /* Добавлено поведение для hover */
+    /* Quando il pulsante o il menu sono in hover, il menu si mostra */
     .menu-button:hover + .dropdown-menu,
     .dropdown-menu:hover {
       opacity: 1;
@@ -118,6 +124,7 @@
       margin-bottom: 15px;
     }
 
+    /* Link dentro al menu */
     .dropdown-menu a {
       color: #ffffff;
       text-decoration: none;
@@ -149,7 +156,7 @@
       width: 100%;
     }
 
-    /* Close button */
+    /* Bottone per chiudere il menu */
     .close-btn {
       position: absolute;
       top: 10px;
@@ -169,7 +176,7 @@
       color: #ff0000;
     }
 
-    /* Workspace */
+    /* Area di lavoro/canvas (qui non disegnata ma pronta per effetti futuri) */
     .workspace {
       width: 100vw;
       height: 100vh;
@@ -185,7 +192,7 @@
       transition: transform 0.1s ease;
     }
 
-    /* Social Links Section */
+    /* Sezione link social centrata a schermo */
     .social-links {
       position: absolute;
       top: 50%;
@@ -234,7 +241,7 @@
       font-size: 36px;
     }
 
-    /* Connect with Me Section */
+    /* Sezione “Connect with Me” in basso */
     .connect-with-me {
       position: absolute;
       bottom: 20px;
@@ -278,46 +285,38 @@
 </head>
 <body>
 
-  <!-- Menu Button -->
+  <!-- Pulsante menu con animazione -->
   <div class="menu-button">
     <div class="sound-wave">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span><span></span><span></span>
     </div>
   </div>
 
-  <!-- Dropdown Menu -->
+  <!-- Menu a tendina nascosto -->
   <div class="dropdown-menu" id="menu">
     <div class="dropdown-menu-header">
       <div class="sound-wave">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
+        <span></span><span></span><span></span><span></span><span></span>
       </div>
     </div>
     <ul>
-      <li><a href="/isolatedspace/">OTIV Creations</a></li>
+      <li><a href="/OTIV Creations/">OTIV Creations</a></li>
       <li><a href="/commercial/">Showcase</a></li>
-      <li><a href="/workflows/">Soon/.</a></li>
-      <li><a href="/socials/">Socials, contact</a></li>
-      <li><a href="/about/">About</a></li>
+      <li><a href="/workflows/">Prossimamente</a></li>
+      <li><a href="/socials/">Social e Contatti</a></li>
+      <li><a href="/about/">Chi Siamo</a></li>
     </ul>
     <button class="close-btn">✕</button>
   </div>
 
-  <!-- Workspace -->
+  <!-- Spazio di lavoro (per grafica/animazioni future) -->
   <div class="workspace">
     <div class="canvas" id="canvas"></div>
   </div>
 
-  <!-- Social Links Section -->
+  <!-- Sezione Link Social -->
   <div class="social-links">
-    <h1>Social Links</h1>
+    <h1>Link Social</h1>
     <ul>
       <li>
         <a href="https://www.instagram.com/ai.otiv/" target="_blank">
@@ -331,13 +330,12 @@
           YouTube
         </a>
       </li>
-     
     </ul>
   </div>
 
-  <!-- Connect with Me Section -->
+  <!-- Sezione contatti diretti -->
   <div class="connect-with-me">
-    <h2>Connect with Me</h2>
+    <h2>Contattami</h2>
     <ul>
       <li><a href="https://discord.com/users/.highvolt." target="_blank">Discord</a></li>
       <li><a href="mailto:aiotivprojects@gmail.com">Email</a></li>
