@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OTIV - About</title>
+  <!-- Добавляем favicon -->
+  <link rel="icon" type="image/png" href="/thumbs/isolatedlogotransparentb2048.png">
+  <!-- Подключаем футуристический шрифт Orbitron -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      overflow: hidden;
+      background-color: #0f0f0f;
+      background-image: radial-gradient(#222 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .menu-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .menu-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: scale(1.05);
+    }
+
+    /* Sound Wave Icon */
+    .sound-wave {
+      width: 40px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .sound-wave span {
+      width: 4px;
+      height: 16px;
+      background: white;
+      border-radius: 2px;
+      opacity: 0.8;
+      animation: pulse 1.5s infinite alternate;
+    }
+
+    .sound-wave span:nth-child(1) { height: 24px; animation-delay: 0s; }
+    .sound-wave span:nth-child(2) { height: 16px; animation-delay: 0.1s; }
+    .sound-wave span:nth-child(3) { height: 8px; animation-delay: 0.2s; }
+    .sound-wave span:nth-child(4) { height: 16px; animation-delay: 0.3s; }
+    .sound-wave span:nth-child(5) { height: 24px; animation-delay: 0.4s; }
+
+    @keyframes pulse {
+      0% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* Dropdown Menu */
+    .dropdown-menu {
+      position: absolute;
+      top: 100px;
+      left: 20px;
+      width: 200px;
+      background: rgba(0, 0, 0, 0.9);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      z-index: 1001;
+    }
+
+    /* Добавлено поведение для hover */
+    .menu-button:hover + .dropdown-menu,
+    .dropdown-menu:hover {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-menu-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .dropdown-menu-header .sound-wave {
+      width: 40px;
+      height: 32px;
+      opacity: 0.8;
+    }
+
+    .dropdown-menu ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .dropdown-menu li {
+      margin-bottom: 15px;
+    }
+
+    .dropdown-menu a {
+      color: #ffffff;
+      text-decoration: none;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 16px;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      position: relative;
+      display: block;
+    }
+
+    .dropdown-menu a:hover {
+      color: #ff0000;
+      transform: scale(1.02);
+    }
+
+    .dropdown-menu a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #ff0000;
+      transition: width 0.3s ease;
+    }
+
+    .dropdown-menu a:hover::after {
+      width: 100%;
+    }
+
+    /* Close button */
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .close-btn:hover {
+      transform: rotate(90deg);
+      color: #ff0000;
+    }
+
+    /* Workspace */
+    .workspace {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      /* ✅ Убран cursor: grab — обычный курсор */
+    }
+
+    .canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform-origin: top left;
+      transition: transform 0.1s ease;
+    }
+
+    /* About Section */
+    .about-section {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      max-width: 90vw;
+      padding: 5vh 5vw;
+      box-sizing: border-box;
+    }
+
+    .about-section h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 6vw, 4rem);
+      margin-bottom: 1.5vh;
+      font-weight: 900;
+      letter-spacing: clamp(1px, 0.5vw, 2px);
+    }
+
+    .about-section h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1.5vh;
+      letter-spacing: clamp(1px, 0.3vw, 1.5px);
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 0.5vh;
+      animation: glow-fade 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow-fade {
+      0% {
+        text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+        opacity: 0.9;
+      }
+      100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        opacity: 1;
+      }
+    }
+
+    .about-section p {
+      font-family: sans-serif;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      line-height: 1.6;
+      margin-bottom: 2vh;
+    }
+
+    .red-text {
+      color: #cc0000;
+      font-family: sans-serif;
+      font-size: clamp(0.9rem, 2vw, 1rem);
+    }
+
+    .creator-credit {
+      margin-top: 5vh;
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      line-height: 1.6;
+    }
+
+    .brand-container {
+      display: inline-flex;
+      align-items: center;
+      gap: clamp(2px, 0.5vw, 4px);
+      white-space: nowrap;
+      min-width: 100px;
+      transition: all 0.3s ease;
+    }
+
+    .brand {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: white;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.6);
+      display: inline-block;
+      vertical-align: middle;
+      transition: all 0.3s ease;
+    }
+
+    .brand-logo {
+      width: clamp(16px, 4vw, 24px);
+      height: auto;
+      margin-left: clamp(2px, 0.5vw, 4px);
+      margin-right: clamp(1px, 0.3vw, 2px);
+      opacity: 0.9;
+      transition: all 0.3s ease;
+      animation: glow-pulse 2s infinite alternate;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+    }
+
+    @keyframes glow-pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.9;
+        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+      }
+      100% {
+        transform: scale(1.05);
+        opacity: 1;
+        filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.9));
+      }
+    }
+
+    .brand-container:hover .brand,
+    .brand-container:hover .brand-logo {
+      transform: scale(1.15) rotate(8deg);
+      opacity: 1;
+      text-shadow: 0 0 12px rgba(255, 255, 255, 1), 0 0 20px rgba(255, 255, 255, 0.9);
+      filter: drop-shadow(0 0 16px rgba(255, 255, 255, 1)) brightness(1.2);
+      animation: none;
+    }
+
+    .dev-credit {
+      margin-top: 8vh;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      font-weight: 900;
+      color: white;
+      text-align: center;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.9), 0 0 16px rgba(255, 255, 255, 0.7);
+      animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Menu Button -->
+  <div class="menu-button">
+    <div class="sound-wave">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- Dropdown Menu -->
+  <div class="dropdown-menu" id="menu">
+    <div class="dropdown-menu-header">
+      <div class="sound-wave">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <ul>
+      <li><a href="/isolatedspace/">Isolated Space</a></li>
+      <li><a href="/commercial/">Showcase</a></li>
+      <li><a href="/workflows/">Soon/.</a></li>
+      <li><a href="/socials/">Socials, contact</a></li>
+      <li><a href="/about/">About</a></li>
+    </ul>
+    <button class="close-btn">✕</button>
+  </div>
+
+  <!-- Workspace -->
+  <div class="workspace">
+    <div class="canvas" id="canvas">
+      <!-- About Section -->
+      <div class="about-section">
+        <h1>Vito Spampinato</h1>
+        <h1>
+          <span class="brand-container">
+            <span class="brand">OTIV</span>
+            <img src="/thumbs/isolatedlogotransparentw2048.png" alt="logo" class="brand-logo">
+          </span>
+        </h1>
+        <h2>AI Generative Art & Video | ComfyUI Try Harder | Prompt Engineering </h2>
+        <p>
+          I am an AI Creator focused on Generative Art & Video, combining creativity with advanced workflow. As a ComfyUI Try Harder and Prompt Explorator, I'm in Creative Parnership and Ambassador with major AI Companies
+        </p>
+        <p>
+          My work spans cutting-edge AI tools, from generative models to custom automation stacks, constantly integrating the latest technologies to stay ahead of trends. I specialize in research-driven innovation, creating workflows that turn complex artistic visions into tangible, production-ready content.
+        </p>
+        <p>
+          From image generation to cinematic video workflows and automated design pipelines, I continuously integrate emerging tools into my creative process—often on the cutting edge of release. AI research and workflow innovation are at the heart of what I do.
+        </p>
+
+        <div class="creator-credit">
+          <span class="red-text">All artworks presented on this website were created by </span>
+          <span class="brand-container">
+            <span class="brand">OTIV</span>
+            <img src="/thumbs/isolatedlogotransparentw2048.png" alt="logo" class="brand-logo">
+          </span>
+          <span class="red-text">. Most of these pieces were generated using cutting-edge artificial intelligence tools, blending algorithmic precision with creative vision. ©</span>
+        </div>
+
+        <div class="dev-credit">
+          Web design and development by 
+          <span class="brand-container">
+            <span class="brand">Otiv</span>
+            <img src="/thumbs/isolatedlogotransparentw2048.png" alt="logo" class="brand-logo">
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let canvasX = 0, canvasY = 0;
+    const MAX_DRAG = 100; // ✅ Маленькая дистанция — одинаково на всех устройствах
+
+    function updateCanvasTransform() {
+      const clampedX = Math.max(-MAX_DRAG, Math.min(MAX_DRAG, canvasX));
+      const clampedY = Math.max(-MAX_DRAG, Math.min(MAX_DRAG, canvasY));
+      canvas.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
+    }
+
+    // === DESKTOP DRAG ===
+    document.addEventListener('mousedown', e => {
+      if (e.target.closest('.menu-button') || e.target.closest('.dropdown-menu')) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      canvasX += dx;
+      canvasY += dy;
+      startX = e.clientX;
+      startY = e.clientY;
+      updateCanvasTransform();
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // === MOBILE DRAG ===
+    document.addEventListener('touchstart', e => {
+      if (e.touches.length !== 1) return;
+      if (e.target.closest('.menu-button') || e.target.closest('.dropdown-menu')) return;
+      isDragging = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener('touchmove', e => {
+      if (!isDragging || e.touches.length !== 1) return;
+      const dx = e.touches[0].clientX - startX;
+      const dy = e.touches[0].clientY - startY;
+      canvasX += dx;
+      canvasY += dy;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      updateCanvasTransform();
+      e.preventDefault(); // важно — иначе будет скролл страницы
+    }, { passive: false });
+
+    document.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
+    // Закрытие меню при клике вне его
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('menu');
+      const menuButton = document.querySelector('.menu-button');
+      if (!menu.contains(e.target) && !menuButton.contains(e.target)) {
+        menu.classList.remove('active');
+        menuButton.classList.remove('active');
+      }
+    });
+  </script>
+
+</body>
+</html>
