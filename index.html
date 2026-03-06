@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- SEO & Viewport Ottimizzato -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
+  <meta name="description" content="OTIV | AI Artist & Worldbuilder. Portfolio of Generative Art, Video Synthesis and Creative Technology.">
+  <meta name="keywords" content="AI Art, Generative Video, OTIV, Stable Diffusion, RunwayML, Cyberpunk Artist">
+  <meta name="author" content="OTIV">
+  
+  <!-- Social Share Tags (Open Graph) - FONDAMENTALI per LinkedIn/IG -->
+  <meta property="og:title" content="OTIV | AI ARTIST">
+  <meta property="og:description" content="Exploring the boundaries of Generative Art and Human Creativity.">
+  <meta property="og:type" content="website">
+  <!-- <meta property="og:image" content="URL_DELLA_TUA_IMMAGINE_PREVIEW.jpg"> -->
+
+  <title>OTIV | AI ARTIST</title>
+  
+  <!-- Preload Font per evitare il "flash" di testo non stilizzato -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  
+  <style>
+    /* --- VARIABILI GLOBALI (Facile manutenzione) --- */
+    :root {
+      --neon-green: #00ff41;
+      --neon-cyan: #00fff9;
+      --neon-pink: #ff00c1;
+      --bg-dark: #050505;
+      --glass-bg: rgba(5, 5, 5, 0.92); /* Più scuro per leggibilità */
+      --border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* --- RESET & BASE --- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* Custom Scrollbar (Stile Cyberpunk) */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--neon-green); }
+
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: var(--bg-dark);
+      color: #e0e0e0;
+      overflow-x: hidden;
+      cursor: crosshair; /* Cursore di precisione */
+    }
+
+    /* --- EFFETTO CRT SCANLINES (Texture TV Vecchia) --- */
+    body::after {
+        content: "";
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(0, 0, 0, 0.15),
+            rgba(0, 0, 0, 0.15) 1px,
+            transparent 1px,
+            transparent 2px
+        );
+        pointer-events: none; /* Lascia cliccare sotto */
+        z-index: 10;
+    }
+
+    /* --- VIDEO SFONDO --- */
+    #bg-video {
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        object-fit: cover; z-index: -3;
+        filter: brightness(0.35) contrast(1.1) grayscale(20%) blur(1px); /* Blur leggero per staccare il testo */
+        transform: scale(1.05); /* Evita bordi bianchi indesiderati */
+    }
+
+    /* --- RETE NEURALE --- */
+    #canvas-container {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -2; opacity: 0.25; 
+        pointer-events: none;
+    }
+
+    /* --- HERO SECTION --- */
+    .hero-container {
+      min-height: 80vh; 
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      perspective: 1000px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    /* --- TITOLO GLITCH OTTIMIZZATO --- */
+    .hacker-3d-title {
+      font-family: 'Orbitron', sans-serif; 
+      /* CLAMP: Si adatta matematicamente tra 3rem e 9rem in base allo schermo */
+      font-size: clamp(3.5rem, 12vw, 9rem); 
+      font-weight: 900;
+      color: #fff; 
+      position: relative; 
+      text-transform: uppercase;
+      transform-style: preserve-3d;
+      /* Animazione meno invasiva */
+      animation: glitch-skew 2.5s infinite linear alternate-reverse; 
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+      line-height: 1;
+    }
+    
+    /* Disattiva effetto 3D su mobile per performance */
+    @media (hover: none) {
+        .hacker-3d-title { transform: none !important; }
+    }
+
+    .hacker-3d-title::before, .hacker-3d-title::after {
+      content: 'OTIV'; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark);
+      opacity: 0.8;
+    }
+    .hacker-3d-title::before {
+      left: 2px; text-shadow: -2px 0 var(--neon-pink); clip-path: inset(44% 0 61% 0);
+      animation: glitch-anim-heavy-1 3s infinite linear alternate-reverse;
+    }
+    .hacker-3d-title::after {
+      left: -2px; text-shadow: -2px 0 var(--neon-cyan); clip-path: inset(50% 0 30% 0);
+      animation: glitch-anim-heavy-2 3.5s infinite linear alternate-reverse;
+    }
+
+    @keyframes glitch-skew {
+      0%, 100% { transform: skew(0deg); }
+      20% { transform: skew(-1deg); }
+      40% { transform: skew(1deg); }
+    }
+    @keyframes glitch-anim-heavy-1 {
+      0% { clip-path: inset(80% 0 2% 0); } 100% { clip-path: inset(15% 0 50% 0); }
+    }
+    @keyframes glitch-anim-heavy-2 {
+      0% { clip-path: inset(10% 0 60% 0); } 100% { clip-path: inset(20% 0 70% 0); }
+    }
+
+    /* --- SOTTOTITOLO --- */
+    .subtitle {
+      margin-top: 15px;
+      font-family: 'Orbitron', sans-serif; 
+      font-weight: 400;
+      font-size: clamp(0.8rem, 3vw, 1.2rem);
+      color: #a0a0a0; 
+      text-transform: uppercase;
+      letter-spacing: 6px; 
+      animation: cinematicFade 2s ease-out forwards;
+      opacity: 0; 
+    }
+
+    @keyframes cinematicFade {
+        0% { opacity: 0; letter-spacing: 15px; filter: blur(5px); }
+        100% { opacity: 1; letter-spacing: 6px; filter: blur(0); }
+    }
+
+    /* --- BOX CONTENUTI --- */
+    section { 
+        max-width: 800px; margin: 60px auto; padding: 45px; 
+        background: var(--glass-bg);
+        border: 1px solid var(--border-color); border-radius: 2px;
+        backdrop-filter: blur(8px); 
+        box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        position: relative;
+        overflow: hidden; /* Contiene effetto shine */
+        transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    
+    /* Effetto Hover sulla card */
+    section:hover {
+        border-color: rgba(0, 255, 65, 0.3);
+    }
+    
+    /* Decorazione angolo Tech */
+    section::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+        background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+        opacity: 0.5;
+    }
+    
+    h2 {
+      color: #fff; text-transform: uppercase; font-size: 1.2rem;
+      margin-bottom: 30px; border-left: 3px solid var(--neon-green);
+      padding-left: 15px; letter-spacing: 2px;
+      display: inline-block;
+    }
+    
+    p { font-size: 16px; line-height: 1.8; color: #d0d0d0; margin-bottom: 20px; }
+
+    /* LINK GRID (Bottoni) */
+    .link-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+    
+    .link-grid a {
+      position: relative;
+      background: rgba(255,255,255,0.03); 
+      padding: 18px; color: #fff; border: 1px solid #333;
+      text-decoration: none; text-align: center; 
+      transition: all 0.3s ease; 
+      font-size: 13px; text-transform: uppercase; letter-spacing: 1px;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    /* Effetto Fill al click/hover */
+    .link-grid a::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 0%; height: 100%;
+        background: var(--neon-green); z-index: -1; transition: width 0.3s ease;
+    }
+    
+    .link-grid a:hover { 
+        color: #000; font-weight: 800; border-color: var(--neon-green); 
+        box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+    }
+    .link-grid a:hover::before { width: 100%; }
+
+    /* LISTE */
+    ul { list-style: none; }
+    .list-row li {
+        border-bottom: 1px solid #222; padding: 15px 0; 
+        display: flex; justify-content: space-between; align-items: center;
+        color: #999; font-size: 14px; transition: padding 0.3s;
+    }
+    
+    .list-row li:last-child { border-bottom: none; }
+    
+    .list-row li:hover { padding-left: 10px; padding-right: 10px; background: rgba(255,255,255,0.02); }
+
+    .list-row a.special-link {
+        text-decoration: none; color: inherit; width: 100%;
+        display: flex; justify-content: space-between; 
+        transition: color 0.3s;
+    }
+    
+    .list-row a.special-link:hover, .list-row a.special-link:hover span { color: var(--neon-green); }
+    
+    .list-row li span { 
+        color: #e0e0e0; font-weight: bold; text-align: right; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; 
+    }
+
+    footer { 
+        text-align: center; padding: 80px 20px 40px; 
+        font-size: 11px; color: #666; letter-spacing: 3px; 
+        position: relative; z-index: 2; 
+    }
+    
+    footer p { margin-bottom: 5px; color: #666;}
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .subtitle { letter-spacing: 3px; }
+      section { margin: 30px 15px; padding: 30px 20px; }
+      .list-row li, .list-row a.special-link { flex-direction: column; gap: 8px; align-items: flex-start; }
+      .list-row li span { text-align: left; color: var(--neon-green); font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- VIDEO SFONDO: Importante aggiungere poster="" come fallback se il video non carica -->
+  <video autoplay muted loop playsinline id="bg-video" poster="img/fallback-bg.jpg">
+    <source src="video/background.mp4" type="video/mp4">
+    <!-- Fallback testo se il browser non supporta video -->
+  </video>
+
+  <!-- RETE NEURALE CANVAS -->
+  <div id="canvas-container"><canvas id="neuralCanvas"></canvas></div>
+
+  <!-- HERO -->
+  <div class="hero-container" id="hero">
+    <div class="hacker-3d-title" id="title3d" data-text="OTIV">OTIV</div>
+    <div class="subtitle">AI Artist • Worldbuilder</div>
+  </div>
+
+  <!-- 1. WHO IS OTIV? -->
+  <section>
+    <h2 class="hacker-text" data-value=">_WHO_IS_OTIV?">>_WHO_IS_OTIV?</h2>
+    <p>
+      OTIV is an AI Creator focused on <strong>Generative Art & Video</strong>. 
+      Combining neural rendering with cinematic workflows, OTIV preserves the soul of original footage while rewriting its aesthetic code through latent space exploration.
+    </p>
+  </section>
+
+  <!-- 2. SOCIALS AND CONTACT -->
+  <section>
+    <h2 class="hacker-text" data-value=">_CONNECT_PROTOCOL">>_CONNECT_PROTOCOL</h2>
+    <div class="link-grid">
+      <a href="https://www.instagram.com/ai.otiv/" target="_blank">Instagram</a>
+      <a href="https://www.linkedin.com/in/vito-spampinato-98ab4b161/" target="_blank">LinkedIn</a>
+      <a href="mailto:aiotivprojects@gmail.com">Initiate Contact</a>
+    </div>
+  </section>
+
+  <!-- 3. AMBASSADOR / BETA TESTER -->
+  <section>
+    <h2 class="hacker-text" data-value=">_ROLES_&_ACCESS">>_ROLES_&_ACCESS</h2>
+    <ul class="list-row">
+      <li> Mago.studio AI <span> Beta Tester / Creative</span></li>
+      <li>
+          <a href="https://higgsfield.ai" target="_blank" class="special-link">
+              Higgsfield AI <span>Ambassador Program ↗</span>
+          </a>
+      </li>
+	  <li>
+          <a href="https://dub.florafauna.ai/vito-spampinato" target="_blank" class="special-link">
+              Flora AI <span>Ambassador Program ↗</span>
+          </a>
+      </li>
+      <li>OpenArt<span>Ambassador Program</span></li>
+    </ul>
+  </section>
+
+  <!-- 4. PARTNERSHIP -->
+  <section>
+    <h2 class="hacker-text" data-value=">_ALLIANCES">>_ALLIANCES</h2>
+    <ul class="list-row">
+      <li>RunwayML <span>Creative Partnership</span></li>
+      <li>FloraFauna<span>Creative Partnership</span></li>
+      <li>Kling<span>Elite Creators Program</span></li>
+      <li>Weavy AI <span>Creative Partnership</span></li>
+      <li>Imagineart<span>Creative Partnership</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>OTIV © 2025 // SYSTEM STATUS: ONLINE</p>
+    <p style="opacity: 0.5; font-size: 9px;">DESIGNED BY NEURAL NETWORKS</p>
+  </footer>
+
+  <script>
+    /* --- JS: 3D TITLE TILT (Disabilitato su Mobile per Performance) --- */
+    const hero = document.getElementById('hero');
+    const title = document.getElementById('title3d');
+    
+    // Controlla se il dispositivo ha un puntatore preciso (Mouse)
+    const isDesktop = window.matchMedia("(hover: hover)").matches;
+
+    if (isDesktop) {
+        document.addEventListener('mousemove', (e) => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            // Calcolo rotazione più morbido
+            let xAxis = (width / 2 - e.pageX) / 40;
+            let yAxis = (height / 2 - e.pageY) / 40;
+            
+            title.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            title.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            title.style.transition = "transform 0.5s ease";
+        });
+        
+        document.addEventListener('mouseenter', () => { 
+            title.style.transition = "none"; 
+        });
+    }
+
+    /* --- JS: HACKER TEXT EFFECT --- */
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_#@&";
+    
+    function runHackerEffect(element) {
+        let iteration = 0; 
+        const originalText = element.dataset.value; 
+        clearInterval(element.interval);
+        
+        element.interval = setInterval(() => {
+            element.innerText = originalText.split("").map((letter, index) => {
+                if(index < iteration) return originalText[index];
+                return letters[Math.floor(Math.random() * letters.length)];
+            }).join("");
+            
+            if(iteration >= originalText.length) clearInterval(element.interval);
+            iteration += 1 / 2; // Rallentato leggermente per effetto più "cinematico"
+        }, 40);
+    }
+
+    // Intersection Observer: attiva l'effetto quando scrollo sull'elemento
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                runHackerEffect(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll(".hacker-text").forEach(h2 => {
+        observer.observe(h2); // Attiva allo scroll
+        h2.onmouseover = event => runHackerEffect(event.target); // Attiva anche all'hover
+    });
+
+    /* --- JS: CANVAS NETWORK OPTIMIZED --- */
+    const canvas = document.getElementById('neuralCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+    
+    function resize() { 
+        width = canvas.width = window.innerWidth; 
+        height = canvas.height = window.innerHeight; 
+    }
+    
+    class Particle {
+        constructor(){ 
+            this.x = Math.random() * width; 
+            this.y = Math.random() * height; 
+            this.vx = (Math.random() - 0.5) * 0.5; // Velocità ridotta per eleganza
+            this.vy = (Math.random() - 0.5) * 0.5; 
+            this.size = Math.random() * 1.5;
+        }
+        update(){ 
+            this.x += this.vx; 
+            this.y += this.vy; 
+            // Wrap around screen
+            if(this.x < 0) this.x = width;
+            if(this.x > width) this.x = 0;
+            if(this.y < 0) this.y = height;
+            if(this.y > height) this.y = 0;
+        }
+        draw(){ 
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'; 
+            ctx.beginPath(); 
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); 
+            ctx.fill(); 
+        }
+    }
+    
+    function init(){ 
+        particles = []; 
+        // LIMITATORE PRESTAZIONI:
+        // Max 80 particelle anche su schermi enormi. Minimo 30.
+        const particleCount = Math.min(Math.max(Math.floor(window.innerWidth / 15), 30), 80);
+        
+        for(let i=0; i < particleCount; i++) {
+            particles.push(new Particle());
+        } 
+    }
+    
+    function animate(){
+        ctx.clearRect(0, 0, width, height);
+        
+        particles.forEach((p, i) => {
+            p.update(); 
+            p.draw();
+            
+            // Collega le particelle vicine
+            for(let j = i + 1; j < particles.length; j++){
+                const p2 = particles[j]; 
+                const d = Math.hypot(p.x - p2.x, p.y - p2.y);
+                const connectDistance = 120; // Distanza connessione
+                
+                if(d < connectDistance){ 
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 * (1 - d/connectDistance)})`; 
+                    ctx.lineWidth = 0.5; 
+                    ctx.beginPath(); 
+                    ctx.moveTo(p.x, p.y); 
+                    ctx.lineTo(p2.x, p2.y); 
+                    ctx.stroke(); 
+                }
+            }
+        });
+        requestAnimationFrame(animate);
+    }
+    
+    window.addEventListener('resize', () => { resize(); init(); });
+    resize(); init(); animate();
+  </script>
+</body>
+</html>
